@@ -120,7 +120,8 @@ class Dataset:
         self, df, window_size, prediction_horizon, shuffle=False, test_split=0.2,val_split=0.2
     ):  # TODO vectorize
         # TODO add index to df
-        def create_xy(df):
+        # TODO multistep flattener
+        def create_xy(df,target_col="active_power_total"):
             X = []
             y = []
             for i in range(0, len(df)):
@@ -129,9 +130,12 @@ class Dataset:
                     < prediction_horizon
                 ):
                     break
-                X.append(df[i : (i + window_size)])
-                y.append(df[(i + window_size) : (i + window_size + prediction_horizon)])
+                X.append(df[target_col][i : (i + window_size)])
+                y.append(df[target_col][(i + window_size) : (i + window_size + prediction_horizon)])
             X = np.array(X)
+
+            #join old features with X
+            X = np.concatenate((X,df.iloc[window_size:len(X)+window_size,:].drop(target_col, axis=1) ), axis=1)
             y = np.array(y)
             return X, y
 
@@ -145,4 +149,7 @@ class Dataset:
         val_x, val_y = create_xy(val_df)
         test_x, test_y = create_xy(test_df)
 
-        return train_x,val_x, test_x, train_y,val_y, test_y
+        names = [f'lag_{i}' for i in range(1,window_size+1)]
+        names.extend(list(df.drop("active_power_total", axis=1).columns))
+
+        return train_x,val_x, test_x, train_y,val_y, test_y,names

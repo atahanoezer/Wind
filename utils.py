@@ -56,7 +56,7 @@ def score_function(true_values, predicted_values):
     mae = mean_absolute_error(true_values, predicted_values)
 
     # Calculate the root mean squared error (RMSE)
-    rmse = mean_squared_error(true_values, predicted_values)
+    rmse = mean_squared_error(true_values, predicted_values, squared=False)
 
     r_2 = r2_score(true_values, predicted_values)
 
