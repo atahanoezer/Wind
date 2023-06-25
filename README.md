@@ -46,8 +46,8 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 <!-- resize the image and center -->
 
 <p align="center">
-<img src="Reports/uebb_correlation.jpeg" alt="Correlation" style="max-width: 500px; max-height: 300px;">
-
+<img src="Reports/uebb_correlation.jpeg" alt="Correlation" style="max-width: 300px; max-height: 300px;">
+</p>
 
 
 
@@ -56,6 +56,23 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 **TBD**
 
 ## **Modeling**
+
+
+The modeling approach involves utilizing two gradient boosted tree methods, namely Catboost and LightGBM. The Model class design allows for the flexibility to incorporate other tree-based methods if desired. Each model employs two prediction mechanisms: One-shot prediction and Recursive Prediction, enabling the generation of predictions for different time horizons. For hyperparameter selection, Bayesian hyperparameter optimization is performed using Optuna, enhancing the overall performance and accuracy of the predictions.
+
+### **One Shot Prediction**
+
+One-shot prediction is a straightforward approach that directly predicts the target variable for a specific time step without calculating intermediate steps. In the context of wind turbine power output prediction, this methodology converts the problem into a supervised learning task. The target variable becomes the power output of the wind turbine, while the features consist of the previous power outputs of the turbine. By leveraging this method, we can predict the power output for a future time interval, such as the next 10 minutes, without needing to calculate power outputs for shorter intervals in between. This is accomplished by utilizing the past 10 minutes of data. The advantage of this approach is that it allows us to leverage previous data without being restricted by causality limitations, making it an excellent candidate for accurately predicting wind turbine power output.
+
+### **Recursive Prediction**
+
+
+Recursive prediction is a sophisticated approach that involves predicting the target variable for a specific time step by calculating intermediate steps. In the case of wind turbine power output prediction, the target variable is the power output of the turbine, while the features include the previous power outputs. However, recursive prediction differs from one-shot prediction by requiring the calculation of power outputs for multiple time steps leading up to the desired prediction. This becomes more challenging when dealing with multivariate data because it requries calculation of the other features for intermediate steps which mean additional regressors for each feature. Consequently, recursive prediction may not be suitable when the data heavily relies on non-target features. However, for wind turbine power output prediction, the use of univariate target data with lagged features has proven to be effective and efficient. 
+
+
+### **Bayesian Hyperparameter Optimization**
+
+TBD
 
 ## **Results**
 
