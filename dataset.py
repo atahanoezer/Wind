@@ -7,8 +7,10 @@ class Dataset:
         """
         Initialize the Dataset object.
 
-        Args:
-            df (pd.DataFrame): Input DataFrame containing the data.
+        Parameters
+        ----------
+            df (pd.DataFrame): 
+                Input DataFrame containing the data.
         """
         self.df = df
 
@@ -16,10 +18,13 @@ class Dataset:
         """
         Fill missing values (NaN) in the specified fields/columns of the DataFrame.
 
-        Args:
-            fields (list): List of fields/columns to fill missing values.
+        Parameters
+        ----------
+            fields (list): 
+                List of fields/columns to fill missing values.
 
-        Returns:
+        Returns
+        -------
             None
         """
         for f in fields:
@@ -30,10 +35,13 @@ class Dataset:
         """
         Drop rows containing NaN values in the specified fields/columns of the DataFrame.
 
-        Args:
-            fields (list): List of fields/columns to drop rows with NaN values.
+        Parameters
+        ----------
+            fields (list): 
+                List of fields/columns to drop rows with NaN values.
 
-        Returns:
+        Returns
+        -------
             None
         """
         self.df = self.df.drop(columns=fields)
@@ -42,10 +50,13 @@ class Dataset:
         """
         Sample every nth row from the DataFrame.
 
-        Args:
-            n (int): Sampling interval.
+        Parameters
+        ----------
+            n (int): 
+                Sampling interval.
 
-        Returns:
+        Returns
+        -------
             None
         """
         self.df = self.df.iloc[::n, :]
@@ -56,12 +67,21 @@ class Dataset:
         """
         Apply a rolling window function to the specified data column in the DataFrame.
 
-        Args:
-            df (pd.DataFrame): DataFrame to which the rolling window function will be applied.
-            data (str): Column name containing the data to apply the rolling window function.
-            roll_time (int): Window size for the rolling window.
-            window_function (callable): Callable function to apply as the rolling window function.
-        Returns:
+        Parameters
+        ----------
+            df (pd.DataFrame): 
+                DataFrame to which the rolling window function will be applied.
+
+            data (str): 
+                Column name containing the data to apply the rolling window function.
+
+            roll_time (int): 
+                Window size for the rolling window.
+
+            window_function (callable): 
+                Callable function to apply as the rolling window function.
+        Returns
+        -------
             None
         """
         if not callable(window_function):
@@ -77,12 +97,19 @@ class Dataset:
         """
         Add lagged versions of a column to the DataFrame.
 
-        Args:
-            df (pd.DataFrame): DataFrame to which the lagged columns will be added.
-            data (str): Column name to create lagged versions of.
-            step (int, optional): Number of lagged steps to add. Defaults to 2.
+        Parameters
+        ----------
+            df (pd.DataFrame): 
+                DataFrame to which the lagged columns will be added.
 
-        Returns:
+            data (str): 
+                Column name to create lagged versions of.
+
+            step (int, optional): 
+                Number of lagged steps to add. Defaults to 2.
+
+        Returns
+        -------
             None
         """
         for i in range(1, step + 1):
@@ -93,11 +120,16 @@ class Dataset:
         """
         Add seasonal features based on a time column.
 
-        Args:
-            df (pd.DataFrame): DataFrame to which the seasonal features will be added.
-            time_col: Time column to extract seasonal features from.
+        Parameters
+        ----------
+            df (pd.DataFrame): 
+                DataFrame to which the seasonal features will be added.
 
-        Returns:
+            time_col: 
+                Time column to extract seasonal features from.
+
+        Returns
+        -------
             None
         """
         df["hour_sin"] = np.sin(time_col.hour / 23 * 2 * np.pi)
@@ -118,16 +150,31 @@ class Dataset:
         """
         Create a dataset for training and evaluation.
 
-        Args:
-            df (pd.DataFrame): Input DataFrame containing the data.
-            window_size (int): Size of the input window.
-            prediction_horizon (int): Number of steps to predict into the future.
-            test_split (float, optional): Ratio of test data split. Defaults to 0.2.
-            val_split (float, optional): Ratio of validation data split. Defaults to 0.2.
-            univariate (bool, optional): Flag indicating if the data is univariate. Defaults to False.
-            target_col (str, optional): Name of the target column. Defaults to "active_power_total".
+        Parameters
+        ----------
+            df (pd.DataFrame):
+                 Input DataFrame containing the data.
 
-        Returns:
+            window_size (int):
+                 Size of the input window.
+
+            prediction_horizon (int):
+                 Number of steps to predict into the future.
+
+            test_split (float, optional): 
+                Ratio of test data split. Defaults to 0.2.
+
+            val_split (float, optional):
+                 Ratio of validation data split. Defaults to 0.2.
+
+            univariate (bool, optional): 
+                Flag indicating if the data is univariate. Defaults to False.
+                
+            target_col (str, optional): 
+                Name of the target column. Defaults to "active_power_total".
+
+        Returns
+        -------
             tuple: Tuple containing train,val and test data and labels, as well as feature names.
         """
 
