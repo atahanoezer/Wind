@@ -67,7 +67,7 @@ class Dataset:
         if not callable(window_function):
             raise ValueError("window_function must be a callable function")
 
-        df[f"rolling_{window_function.__name__}_{data}"] = (
+        df[f"rolling_{window_function.__name__}_{data}_{roll_time}"] = (
             df[data].rolling(window=roll_time).apply(window_function)
         )
         df.fillna(0, inplace=True)
