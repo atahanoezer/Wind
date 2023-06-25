@@ -46,8 +46,9 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 <!-- resize the image and center -->
 
 <p align="center">
-<img src="Reports/uebb_correlation.jpeg" alt="Correlation" style="max-width: 300px; max-height: 300px;">
+<img src="Reports/uebb_correlation.jpeg" alt="Correlation" width="100" height="100"">
 </p>
+
 
 
 
@@ -58,7 +59,7 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 ## **Modeling**
 
 
-The modeling approach involves utilizing two gradient boosted tree methods, namely Catboost and LightGBM. The Model class design allows for the flexibility to incorporate other tree-based methods if desired. Each model employs two prediction mechanisms: One-shot prediction and Recursive Prediction, enabling the generation of predictions for different time horizons. For hyperparameter selection, Bayesian hyperparameter optimization is performed using Optuna, enhancing the overall performance and accuracy of the predictions.
+The modeling approach involves utilizing two gradient boosted tree methods, namely Catboost and LightGBM. The Model class design allows for the flexibility to incorporate other tree-based methods if desired. Each model employs two prediction mechanisms: One-shot prediction and Recursive Prediction, enabling the generation of predictions for different time horizons. For hyperparameter selection Bayesian hyperparameter optimization is performed using Optuna, enhancing the overall performance and accuracy of the predictions.
 
 ### **One Shot Prediction**
 
