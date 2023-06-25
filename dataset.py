@@ -3,75 +3,67 @@ import numpy as np
 
 
 class Dataset:
-    """
-    A class that represents a dataset and provides methods for data preprocessing and feature engineering.
-
-    Parameters:
-                    df (pd.DataFrame): The input DataFrame containing the dataset.
-
-    Methods:
-                    create_y(df: pd.DataFrame, delay: int) -> pd.DataFrame:
-                                    Creates a lagged target variable DataFrame.
-
-                    apply_rolling_window(df: pd.DataFrame, data: str, roll_time: int, window_function: callable):
-                                    Applies a rolling window function to a specific column of the DataFrame.
-
-                    add_last_t(df: pd.DataFrame, data: str, step: int = 2):
-                                    Adds the last T steps of a specific column as new features to the DataFrame.
-
-                    add_seasonal_feat(df: pd.DataFrame):
-                                    Adds seasonal features based on time information to the DataFrame.
-
-                    create_dataset(delay: int, roll_time: int, rolling_features: list = []) -> pd.DataFrame:
-                                    Creates the final dataset with lagged features, rolling window features, and additional features.
-    """
-
     def __init__(self, df: pd.DataFrame):
+        """
+        Initialize the Dataset object.
+
+        Args:
+            df (pd.DataFrame): Input DataFrame containing the data.
+        """
         self.df = df
 
-    def fill_nan(self, fields):  # TODO add delayed Nan handling
-        for f in fields:  # fill na with previous value
-            self.df[f] = self.df[f].ffill()
-            self.df[f] = self.df[f].fillna(
-                self.df[f].mean()
-            )  # fill remaining na with mean
+    def fill_nan(self, fields: list):
+        """
+        Fill missing values (NaN) in the specified fields/columns of the DataFrame.
 
-    def drop_nan(self, fields):
+        Args:
+            fields (list): List of fields/columns to fill missing values.
+
+        Returns:
+            None
+        """
+        for f in fields:
+            self.df[f] = self.df[f].ffill()
+            self.df[f] = self.df[f].fillna(self.df[f].mean())
+
+    def drop_nan(self, fields: list):
+        """
+        Drop rows containing NaN values in the specified fields/columns of the DataFrame.
+
+        Args:
+            fields (list): List of fields/columns to drop rows with NaN values.
+
+        Returns:
+            None
+        """
         self.df = self.df.drop(columns=fields)
 
     def sample(self, n: int):
-        self.df = self.df.iloc[::n, :]  # sample every nth row
-
-    def create_y(self, df: pd.DataFrame, delay: int) -> pd.DataFrame:
         """
-        Create a lagged target variable DataFrame.
+        Sample every nth row from the DataFrame.
 
-        Parameters:
-                        df (pd.DataFrame): The input DataFrame.
-                        delay (int): The number of time steps to lag the data.
+        Args:
+            n (int): Sampling interval.
 
         Returns:
-                        pd.DataFrame: The DataFrame with the lagged target variable.
+            None
         """
-        y = pd.DataFrame()
-        y["y"] = df.shift(-delay)
-        y.dropna(inplace=True)
-        return y
+        self.df = self.df.iloc[::n, :]
 
     def apply_rolling_window(
         self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable
-    ):
+    ) -> pd.DataFrame:
         """
-        Applies a rolling window function to a specific column of the DataFrame.
+        Apply a rolling window function to the specified data column in the DataFrame.
 
-        Parameters:
-                        df (pd.DataFrame): The input DataFrame.
-                        data (str): The column name on which to apply the rolling window function.
-                        roll_time (int): The window size for the rolling window function.
-                        window_function (callable): The function to apply on the rolling window.
+        Args:
+            df (pd.DataFrame): DataFrame to which the rolling window function will be applied.
+            data (str): Column name containing the data to apply the rolling window function.
+            roll_time (int): Window size for the rolling window.
+            window_function (callable): Callable function to apply as the rolling window function.
 
         Returns:
-                        pd.DataFrame: The DataFrame with the applied rolling window function.
+            pd.DataFrame: DataFrame with the new column containing the rolling window function values.
         """
         if not callable(window_function):
             raise ValueError("window_function must be a callable function")
@@ -84,44 +76,63 @@ class Dataset:
 
     def add_last_t(self, df: pd.DataFrame, data: str, step: int = 2):
         """
-        Adds the last T steps of a specific column as new features to the DataFrame.
+        Add lagged versions of a column to the DataFrame.
 
-        Parameters:
-                        df (pd.DataFrame): The input DataFrame.
-                        data (str): The column name for which to add the last T steps as new features.
-                        step (int): The number of steps to consider.
+        Args:
+            df (pd.DataFrame): DataFrame to which the lagged columns will be added.
+            data (str): Column name to create lagged versions of.
+            step (int, optional): Number of lagged steps to add. Defaults to 2.
 
         Returns:
-                        None
+            None
         """
         for i in range(1, step + 1):
             df[f"{data}_last_{i}_step"] = df[data].shift(i)
             df[f"{data}_last_{i}_step"].fillna(0)
 
-    def get_df(self):
-        return self.df
-
-    def add_seasonal_feat(self, df: pd.DataFrame):
+    def add_seasonal_feat(self, df: pd.DataFrame, time_col):
         """
-        Adds seasonal features based on time information to the DataFrame.
+        Add seasonal features based on a time column.
 
-        Parameters:
-                        df (pd.DataFrame): The input DataFrame.
+        Args:
+            df (pd.DataFrame): DataFrame to which the seasonal features will be added.
+            time_col: Time column to extract seasonal features from.
 
         Returns:
-                        None
+            None
         """
-        df["hour_sin"] = np.sin(df.Time.dt.hour / 23 * 2 * np.pi)
-        df["hour_cos"] = np.cos(df.Time.dt.hour / 23 * 2 * np.pi)
-        df["week_sin"] = np.sin((df.Time.dt.week / 52) * 2 * np.pi)
-        df["week_cos"] = np.cos((df.Time.dt.week / 52) * 2 * np.pi)
+        df["hour_sin"] = np.sin(time_col.hour / 23 * 2 * np.pi)
+        df["hour_cos"] = np.cos(time_col.hour / 23 * 2 * np.pi)
+        df["week_sin"] = np.sin((time_col.week / 52) * 2 * np.pi)
+        df["week_cos"] = np.cos((time_col.week / 52) * 2 * np.pi)
 
     def create_dataset(
-        self, df, window_size, prediction_horizon, shuffle=False, test_split=0.2,val_split=0.2
-    ):  # TODO vectorize
-        # TODO add index to df
-        # TODO multistep flattener
-        def create_xy(df,target_col="active_power_total"):
+        self,
+        df: pd.DataFrame,
+        window_size: int,
+        prediction_horizon: int,
+        test_split: float = 0.2,
+        val_split: float = 0.2,
+        univariate: bool = False,
+        target_col: str = "active_power_total",
+    ) -> tuple:
+        """
+        Create a dataset for training and evaluation.
+
+        Args:
+            df (pd.DataFrame): Input DataFrame containing the data.
+            window_size (int): Size of the input window.
+            prediction_horizon (int): Number of steps to predict into the future.
+            test_split (float, optional): Ratio of test data split. Defaults to 0.2.
+            val_split (float, optional): Ratio of validation data split. Defaults to 0.2.
+            univariate (bool, optional): Flag indicating if the data is univariate. Defaults to False.
+            target_col (str, optional): Name of the target column. Defaults to "active_power_total".
+
+        Returns:
+            tuple: Tuple containing train,val and test data and labels, as well as feature names.
+        """
+
+        def create_xy(df: pd.DataFrame) -> tuple:  # TODO: Vectorize
             X = []
             y = []
             for i in range(0, len(df)):
@@ -131,25 +142,37 @@ class Dataset:
                 ):
                     break
                 X.append(df[target_col][i : (i + window_size)])
-                y.append(df[target_col][(i + window_size) : (i + window_size + prediction_horizon)])
+                y.append(
+                    df[target_col][
+                        (i + window_size) : (i + window_size + prediction_horizon)
+                    ]
+                )
             X = np.array(X)
 
-            #join old features with X
-            X = np.concatenate((X,df.iloc[window_size:len(X)+window_size,:].drop(target_col, axis=1) ), axis=1)
+            if not univariate:
+                X = np.concatenate(
+                    (
+                        X,
+                        df.iloc[window_size : len(X) + window_size, :]
+                        .copy()
+                        .drop(target_col, axis=1),
+                    ),
+                    axis=1,
+                )
             y = np.array(y)
             return X, y
 
         train_split = len(df) - int(len(df) * test_split) - int(len(df) * val_split)
         val_split = len(df) - int(len(df) * test_split)
         train_df = df[:train_split]
-        val_df = df[train_split - window_size :val_split]
+        val_df = df[train_split - window_size : val_split]
         test_df = df[val_split - window_size :]
 
         train_x, train_y = create_xy(train_df)
         val_x, val_y = create_xy(val_df)
         test_x, test_y = create_xy(test_df)
 
-        names = [f'lag_{i}' for i in range(1,window_size+1)]
-        names.extend(list(df.drop("active_power_total", axis=1).columns))
+        names = [f"lag_{i}" for i in range(1, window_size + 1)]
+        names.extend(list(df.copy().drop(target_col, axis=1).columns))
 
-        return train_x,val_x, test_x, train_y,val_y, test_y,names
+        return train_x, val_x, test_x, train_y, val_y, test_y, names
