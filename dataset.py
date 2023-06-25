@@ -52,7 +52,7 @@ class Dataset:
 
     def apply_rolling_window(
         self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable
-    ) -> pd.DataFrame:
+    ) :
         """
         Apply a rolling window function to the specified data column in the DataFrame.
 
@@ -61,9 +61,8 @@ class Dataset:
             data (str): Column name containing the data to apply the rolling window function.
             roll_time (int): Window size for the rolling window.
             window_function (callable): Callable function to apply as the rolling window function.
-
         Returns:
-            pd.DataFrame: DataFrame with the new column containing the rolling window function values.
+            None
         """
         if not callable(window_function):
             raise ValueError("window_function must be a callable function")
@@ -72,7 +71,7 @@ class Dataset:
             df[data].rolling(window=roll_time).apply(window_function)
         )
         df.fillna(0, inplace=True)
-        return df
+
 
     def add_last_t(self, df: pd.DataFrame, data: str, step: int = 2):
         """
@@ -155,7 +154,7 @@ class Dataset:
                         X,
                         df.iloc[window_size : len(X) + window_size, :]
                         .copy()
-                        .drop(target_col, axis=1),
+                        .drop(target_col, axis=1),# target col appears as the highest lag
                     ),
                     axis=1,
                 )
