@@ -46,7 +46,7 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 <!-- resize the image and center -->
 
 <p align="center">
-<img src="Reports/uebb_correlation.jpeg" alt="Correlation" width="100" height="100"">
+<img src="Reports/uebb_correlation.jpeg" alt="Correlation" width="300" height="300"">
 </p>
 
 
