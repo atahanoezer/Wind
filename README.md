@@ -36,14 +36,24 @@ UK dataset encompasses information related to the Kelmarsh wind farm in the UK. 
 
 
 
-
-
 ## **Exploratory Data Analysis**
+
+
+Exploratory Data Analysis (EDA) plays a crucial role in understanding and extracting insights from datasets. One powerful tool for conducting EDA is the pandas profiling library.It automates the process of generating comprehensive reports on the dataset, providing insights into its structure, statistical measures, and data quality. The reports include information on data types, missing values, correlations, distributions, outliers, and more. By using pandas profiling, analysts can efficiently identify patterns, anomalies, and data quality issues, facilitating informed decision-making in data preprocessing and modeling
+
+EDA was performed on both datasets using the pandas profiling library. The generated reports can be found in the reports folder. Based on the reports, fields with a high number of missing values were removed, while the remaining missing values were either filled using backward filling or mean imputation methods. Fortunately, the UK dataset providers have already prepared a set of useful columns for analysis out of the original 300 columns [1]. Nevertheless, a profile check was conducted, revealing minor issues that were addressed. Additionally, correlations between the features were examined, and features with high correlation are set to be discarded (TBD). The visualization below showcases the correlation for the UEBB dataset.
+
+<!-- resize the image and center -->
+
+<p align="center">
+<img src="Reports/uebb_correlation.jpeg" alt="Correlation" style="max-width: 500px; max-height: 300px;">
 
 
 
 
 ## **Feature Engineering**
+
+**TBD**
 
 ## **Modeling**
 
@@ -52,3 +62,5 @@ UK dataset encompasses information related to the Kelmarsh wind farm in the UK. 
 
 
 ## **References**
+
+[1]: "Hobbit lifestyles"
