@@ -77,7 +77,64 @@ TBD
 
 ## **Results**
 
+The wind turbine power output prediction models were evaluated using two datasets: UEBB dataset and Kelmarsh dataset with three prediction horizons such as next 10 min, next hour, and next day. The evaluation metrics used to assess the performance of the models were Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R-squared (R2). The baseline results are provided by the lecture and no model information exists.
 
+ -----
+  
+### **UEBB Dataset**
+
+| Metric              	| MAE     	| RMSE    	| R2       	|
+|:-------------------:	|:-------:	|:-------:	|:--------:	|
+| Baseline            	| 36.244 	| 55.4172	| -      	|
+| Next Step One Shot  	| 5.343 	| 8.196 	| 0.998 	|
+|---------------------	|---------	|---------	|----------	|
+| Baseline            	| 81.944	| 119.250	| -      	|
+| Next Hour One Shot  	| 83.309 	| 113.499 	| 0.706 	|
+| Next Hour Recursive 	| **66.937** 	| **92.828**  	| **0.803** 	|
+|---------------------	|---------	|---------	|----------	|
+| Baseline            	| 151.508	| 196.742	| -      	|
+| Next Day One Shot   	| 160.126 	| 191.788 	| 0.152  	|
+| Next Day Recursive  	| **125.653** 	| **160.812** 	| **0.412**	|
+
+
+The Next Step One Shot prediction significantly outperforms the baseline in terms of MAE and RMSE, demonstrating a reduction in prediction errors. The R2 value of 0.998 indicates a high degree of variance explained by the model. 
+
+The Next Hour One Shot prediction has similar MAE to the baseline, but it achieves a lower RMSE, indicating an improvement in prediction accuracy. The R2 value of 0.706 suggests that the model explains a substantial portion of the variance in the data. The Next Hour Recursive prediction outperforms both the baseline and the one shot prediction in terms of MAE and RMSE, indicating a reduction in prediction errors. 
+
+The Next Day Recursive prediction obtains the best scores, indicating improved prediction accuracy for longer time horizons. However, the R2 value of 0.412 suggests that the model's explanatory power is limited compared to short horizon predictions.
+
+ -----
+  
+### **Kelmarsh Dataset**
+
+
+| Metric               	| MAE     	| RMSE    	| R2       	|
+|:-------------------:	|:-------:	|:-------:	|:--------:	|
+| Baseline            	| 91.554 	| 145.603	| -      	|
+| Next Step One Shot   	| 15.549 	| 26.000 	| 0.999 	|
+|---------------------	|---------	|---------	|----------	|
+| Baseline            	| 183.286	| 263.749	| -      	|
+| Next Hour One Shot   	| 173.189 	| 248.638 	| 0.874 	|
+| Next Hour Recursive  	| **112.155** 	| **166.032** 	| **0.944** 	|
+|---------------------	|---------	|---------	|----------	|
+| Baseline            	| 510.710	| 623.023	| -      	|
+| Next Day One Shot    	| 481.773 	| 576.276 	| 0.323 	|
+| Next Day Recursive   	| **169.749** 	| **242.492** 	| **0.880** 	| 
+
+
+The Next Step One Shot prediction significantly outperforms the baseline in terms of MAE and RMSE, indicating a substantial reduction in prediction errors. The R2 value of 0.999 suggests an excellent fit of the model to the data.
+
+Both One shot and Recursive prediction outperforms the baseline in terms of MAE and RMSE scores. Furthermore, their R2 values suggest a good explanatory power of the models. Yet, the Recursive prediction achieves a lower MAE, RMSE ,and R2 compared to the One Shot prediction, indicating a better representation of the longer steps.
+
+As observed before, both one shot and recursive predictions outperform the baseline in terms of MAE and RMSE scores. However, one shot prediction is not quite capable of capturing daily patterns, as indicated by the R2 value of 0.323. In contrast, the recursive prediction is quite good at capturing daily patterns such that it surpasses even the hourly predictions in terms of MAE and RMSE scores. T
+
+The Next Day Recursive prediction achieves a lower MAE and RMSE compared to the baseline, indicating improved prediction accuracy for longer time horizons. The R2 value of 0.880 suggests a better fit of the model to the data compared to the baseline.
+
+-----
+
+### **Summary**
+
+In summary, the forecast models, especially the recursive predictions, generally outperform the baselines in terms of MAE and RMSE, indicating a better generalization than the baseline for both of the datasets. One observation is that one shot predictions can not really outperform baselines in UEBB dataset. I believe this is related to having a smaller validation set compared to Kelmarsh. In addition, obtained results does not include the effect of hyperparameter optimization. I believe that the results can be further improved by using Bayesian hyperparameter optimization with good cross validation.
 
 ## **References**
 
