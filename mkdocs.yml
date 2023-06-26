@@ -1,6 +1,9 @@
-site_name: MkLorum
+site_name: Wind
 site_url: https://example.com/
+plugins:
+  - mkdocstrings
 nav:
     - Home: index.md
-    - About: dataset.md
+    - Dataset: dataset.md
+    - Model : model.md
 theme: readthedocs

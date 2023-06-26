@@ -17,10 +17,35 @@ class Model:
         """
         Initialize the Model object.
 
-        Args:
-            model_function (str, optional): Model function to use ("cb" for CatBoost or "lgb" for LightGBM). Defaults to "cb".
-            params (dict, optional): Parameters for the model function. Defaults to {}.
-            prediction_type (str, optional): Type of prediction ("one_shot" or "recursive"). Defaults to "one_shot".
+        Parameters
+        ----------
+            model_function (str, optional): 
+                Model function to use ("cb" for CatBoost or "lgb" for LightGBM). Defaults to "cb".
+            
+            params (dict, optional):
+                 Parameters for the model function. Defaults to {}.
+
+            prediction_type (str, optional):
+                 Type of prediction ("one_shot" or "recursive"). Defaults to "one_shot".
+        Attributes
+        ----------
+            attr0 : str
+                This is attribute 0.
+
+            attr1: str or None
+                This is attribute 1.
+
+
+        Attributes
+        ----------
+            model_function : str
+                Model function to use ("cb" for CatBoost or "lgb" for LightGBM)
+            params : dict
+                Parameters for the model function
+            prediction_type : str
+                Type of prediction ("one_shot" or "recursive")
+            model : object
+                Trained model object
         """
         self.model_function = (
             CatBoostRegressor if model_function == "cb" else LGBMRegressor
@@ -40,15 +65,28 @@ class Model:
         """
         Train the model.
 
-        Args:
-            train_x (pd.DataFrame): Training input data.
-            train_y (pd.DataFrame): Training target data.
-            val_x (pd.DataFrame): Validation input data.
-            val_y (pd.DataFrame): Validation target data.
-            multioutput (bool, optional): Flag indicating if the model supports multioutput. Defaults to False.
-            verbose (int, optional): Verbosity level during training. Defaults to 500.
+        Parameters
+        ----------
+            train_x (pd.DataFrame):
+                 Training input data.
 
-        Returns:
+            train_y (pd.DataFrame):
+                 Training target data.
+
+            val_x (pd.DataFrame):
+                 Validation input data.
+
+            val_y (pd.DataFrame):
+                 Validation target data.
+
+            multioutput (bool, optional):
+                 Flag indicating if the model supports multioutput. Defaults to False.
+
+            verbose (int, optional):
+                 Verbosity level during training. Defaults to 500.
+
+        Returns
+        -------
             None
         """
         if multioutput:
@@ -60,14 +98,21 @@ class Model:
 
     def predict(self, X: pd.DataFrame, horizon: int = 1) -> np.ndarray:
         """
-        Make predictions using the trained model.
+        Make predictions using the trained model depending on prediction type.
+        Recursive prediction only supports univariate data with previous steps as features.
 
-        Args:
-            X (pd.DataFrame): Input data for prediction.
-            horizon (int, optional): Number of steps to predict into the future. Defaults to 1.
 
-        Returns:
-            np.ndarray: Predicted values.
+        Parameters
+        ----------
+            X (pd.DataFrame): 
+                Input data for prediction.
+            horizon (int, optional): 
+                Number of steps to predict into the future. Defaults to 1.
+
+        Returns
+        -------
+            np.ndarray: 
+                Predicted values.
         """
         if self.prediction_type == "one_shot":
             forecast = self.model.predict(X)
@@ -102,20 +147,42 @@ class Model:
         """
         Generate a summary of the model's performance.
 
-        Args:
-            val_x (pd.DataFrame): Validation input data.
-            val_y (pd.DataFrame): Validation target data
-            test_x (pd.DataFrame): Test input data.
-            test_y (pd.DataFrame): Test target data.
-            plots (bool, optional): Flag indicating if plots should be generated. Defaults to True.
-            plot_steps (int, optional): Number of steps to include in the plots. Defaults to 2000.
-            feat_importance (bool, optional): Flag indicating if feature importance should be calculated and plotted. Defaults to True.
-            feat_steps (int, optional): Number of top features to display in the feature importance plot. Defaults to 15.
-            feat_names (list, optional): List of feature names. Defaults to None.
-            horizon (int, optional): Number of steps to predict into the future. Defaults to 1.
+        Parameters
+        ----------
+            val_x (pd.DataFrame):
+                 Validation input data.
 
-        Returns:
-            tuple: Tuple containing scores (MAE, RMSE, R2) and feature importances (if enabled).
+            val_y (pd.DataFrame):
+                 Validation target data.
+
+            test_x (pd.DataFrame):
+                 Test input data.
+
+            test_y (pd.DataFrame):
+                 Test target data.
+
+            plots (bool, optional):
+                 Flag indicating if plots should be generated. Defaults to True.
+
+            plot_steps (int, optional):
+                 Number of steps to include in the plots. Defaults to 2000.
+
+            feat_importance (bool, optional):
+                 Flag indicating if feature importance should be calculated and plotted. Defaults to True.
+
+            feat_steps (int, optional):
+                 Number of top features to display in the feature importance plot. Defaults to 15.
+
+            feat_names (list, optional):
+                 List of feature names. Defaults to None.
+
+            horizon (int, optional):
+                 Number of steps to predict into the future. Defaults to 1.
+
+        Returns
+        -------
+            tuple: 
+                Tuple containing scores (MAE, RMSE, R2) and feature importances (if enabled).
         """
         val_pred, test_pred = self.predict(val_x, horizon), self.predict(
             test_x, horizon
