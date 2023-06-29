@@ -3,7 +3,7 @@ import pandas as pd
 from lightgbm import LGBMRegressor
 from sklearn.multioutput import MultiOutputRegressor
 from catboost import CatBoostRegressor
-from utils import score_function
+from .utils import score_function
 import matplotlib.pyplot as plt
 
 
