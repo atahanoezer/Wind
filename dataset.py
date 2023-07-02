@@ -199,7 +199,7 @@ class Dataset:
                 X = np.concatenate(
                     (
                         X,
-                        df.iloc[window_size : len(X) + window_size, :]
+                        df.iloc[window_size-1 : len(X) + window_size-1, :]
                         .copy()
                         .drop(target_col, axis=1),# target col appears as the highest lag
                     ),
