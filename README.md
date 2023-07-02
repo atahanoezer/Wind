@@ -31,6 +31,10 @@ For the quick start you can reproduce the results of the project by running the 
 
 This project focuses on generating accurate predictions for wind energy production from two distinct wind farms. The forecasts are required for three time intervals: the next 10 minutes, the next hour, and the next day. To ensure high-quality results and meet the project's objectives, gradient boosted trees are employed in conjunction with Bayesian hyperparameter optimization. Additionally, feature engineering techniques and data imputation methods are utilized to enhance the accuracy of the predictions.
 
+### **Project Structure**
+
+TBD
+
 
 ## **Datasets**
 
