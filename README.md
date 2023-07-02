@@ -17,7 +17,7 @@ For the quick start you can reproduce the results of the project by running the 
 
 ## Todo List
 
-- [ ] Hyperparameter Optimization
+- [ ] Hyperparameter Optimization and CV
 - [ ] Transfer Learning Challange
 - [ ] Feature Engineering
 - [ ] Improved Documentation 
