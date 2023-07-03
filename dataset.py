@@ -33,7 +33,7 @@ class Dataset:
 
     def drop_nan(self, fields: list):
         """
-        Drop rows containing NaN values in the specified fields/columns of the DataFrame.
+        Drop columns in the specified fields/columns of the DataFrame.
 
         Parameters
         ----------
