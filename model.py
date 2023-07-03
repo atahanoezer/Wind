@@ -27,13 +27,6 @@ class Model:
 
             prediction_type (str, optional):
                  Type of prediction ("one_shot" or "recursive"). Defaults to "one_shot".
-        Attributes
-        ----------
-            attr0 : str
-                This is attribute 0.
-
-            attr1: str or None
-                This is attribute 1.
 
 
         Attributes
