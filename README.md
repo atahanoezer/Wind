@@ -21,7 +21,7 @@ For a quick start, you can reproduce the results of the project by running the f
 - [ ] Transfer Learning Challenge
 - [ ] Feature Engineering and Feature Selection
 - [ ] Improved Documentation 
-
+- [ ] Requirements.txt ( Currently Colab handle this )
 
 
 ----
