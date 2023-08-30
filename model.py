@@ -292,3 +292,29 @@ class Model:
 			print('Best hyperparameters:', study.best_params)
 			print('Best RMSE:', study.best_value)
 			return study.best_params, study.best_value
+
+
+	def feat_select(self,
+      val_x: pd.DataFrame,
+      val_y: pd.DataFrame,
+      train_x: pd.DataFrame,
+      train_y: pd.DataFrame,
+      num_feats = 20,
+      num_steps = 3
+        ):
+          self.model = self.model_function(**self.params)
+          summary = self.model.select_features(
+                  X= train_x,
+                  y= train_y,
+                  eval_set=(val_x, val_y),
+                  features_for_select=list(range(train_x.shape[1])),
+                  num_features_to_select=num_feats,
+                  steps=num_steps,
+                  algorithm=EFeaturesSelectionAlgorithm.RecursiveByShapValues,
+                  shap_calc_type=EShapCalcType.Regular,
+                  train_final_model=True,
+                  logging_level='Silent',
+                  plot=True
+                )
+
+          return summary
