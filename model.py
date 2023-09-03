@@ -5,7 +5,9 @@ from sklearn.multioutput import MultiOutputRegressor
 from catboost import CatBoostRegressor
 from .utils import score_function
 import matplotlib.pyplot as plt
-from sklearn.metrics import  mean_squared_error
+from sklearn.metrics import  mean_squared_error,mean_absolute_error
+from catboost import  EShapCalcType, EFeaturesSelectionAlgorithm
+import optuna
 
 
 class Model:
@@ -265,33 +267,58 @@ class Model:
 			train_y: pd.DataFrame,
 			horizon: int = 1,
 			trial = 30,
-			task_type = 'GPU' 
+			task_type = 'GPU'
 		) -> tuple:
+		"""
+			Perform hyperparameter optimization for a machine learning model using Optuna.
 
-			def objective(trial):
-				params = {
-					"iterations": 1000,
-					"learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.1, log=True),
-					"depth": trial.suggest_int("depth", 1, 10),
-					"colsample_bylevel": trial.suggest_float("colsample_bylevel", 0.05, 1.0),
-					"min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 1, 100),
-					'task_type': task_type,
-				}
-				
-				self.model = self.model_function(**params)
-				self.model.fit(train_x, train_y,eval_set=(val_x, val_y), silent=True)
+			Parameters:
+				val_x (pd.DataFrame): Validation dataset features.
+				val_y (pd.DataFrame): Validation dataset labels.
+				train_x (pd.DataFrame): Training dataset features.
+				train_y (pd.DataFrame): Training dataset labels.
+				horizon (int, optional): Prediction horizon for the model. Default is 1.
+				trial (int, optional): Number of optimization trials. Default is 30.
+				task_type (str, optional): Task type for CatBoost ('CPU' or 'GPU'). Default is 'GPU'.
 
-				val_pred = self.predict(val_x, horizon)
-				rmse = mean_squared_error(val_y, val_pred.reshape(-1), squared=False)
+			Returns:
+				tuple: A tuple containing the best hyperparameters (dict) and the corresponding best RMSE (float).
 
-				return rmse
+			This function uses Optuna to perform hyperparameter optimization for a CatBoost machine learning model.
+			It searches for the best hyperparameters within the specified parameter ranges and training settings.
 
-			study = optuna.create_study(direction='minimize')
-			study.optimize(objective, n_trials=30)
+			The optimization objective is to minimize the Root Mean Squared Error (RMSE) on the validation dataset.
+			The best hyperparameters and their corresponding RMSE are returned as a tuple.
 
-			print('Best hyperparameters:', study.best_params)
-			print('Best RMSE:', study.best_value)
-			return study.best_params, study.best_value
+			Example:
+				best_params, best_rmse = hyp_op(val_x, val_y, train_x, train_y, horizon=2, trial=50, task_type='GPU')
+				print("Best Hyperparameters:", best_params)
+				print("Best RMSE:", best_rmse)
+		"""
+
+		def objective(trial):
+			params = {
+				"iterations": 1000,
+				"learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.1, log=True),
+				"depth": trial.suggest_int("depth", 1, 10),
+				# "colsample_bylevel": trial.suggest_float("colsample_bylevel", 0.05, 1.0), # requires task type CPU
+				"min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 1, 100),
+				'task_type': task_type,
+			}
+
+			self.model = self.model_function(**params)
+			self.model.fit(train_x, train_y,eval_set=(val_x, val_y), silent=True)
+
+			val_pred = self.predict(val_x, horizon)
+			rmse = mean_absolute_error(val_y, val_pred.reshape(-1))
+
+			return rmse
+		study = optuna.create_study(direction='minimize')
+		study.optimize(objective, n_trials=30)
+
+		print('Best hyperparameters:', study.best_params)
+		print('Best RMSE:', study.best_value)
+		return study.best_params, study.best_value
 
 
 	def feat_select(self,
@@ -300,21 +327,44 @@ class Model:
       train_x: pd.DataFrame,
       train_y: pd.DataFrame,
       num_feats = 20,
-      num_steps = 3
+      num_steps = 3,
+	  plot = True
         ):
-          self.model = self.model_function(**self.params)
-          summary = self.model.select_features(
-                  X= train_x,
-                  y= train_y,
-                  eval_set=(val_x, val_y),
-                  features_for_select=list(range(train_x.shape[1])),
-                  num_features_to_select=num_feats,
-                  steps=num_steps,
-                  algorithm=EFeaturesSelectionAlgorithm.RecursiveByShapValues,
-                  shap_calc_type=EShapCalcType.Regular,
-                  train_final_model=True,
-                  logging_level='Silent',
-                  plot=True
-                )
+		"""
+		Perform feature selection using CatBoost's select_features method.
 
-          return summary
+		Parameters:
+			val_x (pd.DataFrame): Validation dataset features.
+			val_y (pd.DataFrame): Validation dataset labels.
+			train_x (pd.DataFrame): Training dataset features.
+			train_y (pd.DataFrame): Training dataset labels.
+			num_feats (int, optional): Number of features to select. Default is 20.
+			num_steps (int, optional): Number of feature selection steps. Default is 3.
+			plot (bool, optional): Whether to plot feature selection results. Default is True.
+
+		Returns:
+			catboost.FeatureSelectionSummary: A summary of the feature selection process.
+
+		This function uses CatBoost's select_features method to perform feature selection on the given datasets.
+		It selects a specified number of features based on their importance and returns a summary of the process.
+
+		Example:
+			summary = feat_select(val_x, val_y, train_x, train_y, num_feats=15, num_steps=4, plot=True)
+			print(summary)
+    	"""
+		self.model = self.model_function(**self.params)
+		summary = self.model.select_features(
+				X= train_x,
+				y= train_y,
+				eval_set=(val_x, val_y),
+				features_for_select=list(range(train_x.shape[1])),
+				num_features_to_select=num_feats,
+				steps=num_steps,
+				algorithm=EFeaturesSelectionAlgorithm.RecursiveByShapValues,
+				shap_calc_type=EShapCalcType.Regular,
+				train_final_model=True,
+				logging_level='Silent',
+				plot=plot
+				)
+
+		return summary

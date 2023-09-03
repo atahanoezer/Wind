@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import random
 
 class Dataset:
     def __init__(self, df: pd.DataFrame):
@@ -146,6 +146,7 @@ class Dataset:
         val_split: float = 0.2,
         univariate: bool = False,
         target_col: str = "active_power_total",
+        shuffle: bool = False,
     ) -> tuple:
         """
         Create a dataset for training and evaluation.
@@ -207,6 +208,8 @@ class Dataset:
                 )
             y = np.array(y)
             return X, y
+        
+
 
         train_split = len(df) - int(len(df) * test_split) - int(len(df) * val_split)
         val_split = len(df) - int(len(df) * test_split)
@@ -217,6 +220,30 @@ class Dataset:
         train_x, train_y = create_xy(train_df)
         val_x, val_y = create_xy(val_df)
         test_x, test_y = create_xy(test_df)
+
+        if shuffle:
+            train_val_split = len(train_df)/ (len(train_df) + len(val_df))
+            combined_x = np.concatenate([train_x, val_x], axis=0)
+
+            # Combine train_y and val_y into a single numpy array
+            combined_y = np.concatenate([train_y[:,-1], val_y[:,-1]], axis=0)
+
+            # Combine the features and labels into a single numpy array
+            combined_data = np.column_stack((combined_x, combined_y))
+
+            # Shuffle the combined dataset
+            np.random.shuffle(combined_data)
+
+            # Split the combined dataset back into train and validation sets
+            split_index = int(len(combined_data) * train_val_split)
+            shuffled_train_data = combined_data[:split_index]
+            shuffled_val_data = combined_data[split_index:]
+
+            # Extract shuffled_train_x, shuffled_train_y, shuffled_val_x, shuffled_val_y
+            train_x = shuffled_train_data[:, :-1]
+            train_y = shuffled_train_data[:, -1]
+            val_x = shuffled_val_data[:, :-1]
+            val_y = shuffled_val_data[:, -1]
 
         names = [f"lag_{i}" for i in range(1, window_size + 1)]
         names.extend(list(df.copy().drop(target_col, axis=1).columns))
