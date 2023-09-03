@@ -304,6 +304,7 @@ class Model:
 				# "colsample_bylevel": trial.suggest_float("colsample_bylevel", 0.05, 1.0), # requires task type CPU
 				"min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 1, 100),
 				'task_type': task_type,
+				'thread_count':-1
 			}
 
 			self.model = self.model_function(**params)
