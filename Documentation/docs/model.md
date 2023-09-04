@@ -19,10 +19,10 @@
     table.field-table {
         border-radius: 0.1em
     }
-</style>##model.**Model**
+</style>##Wind.model.**Model**
 
 <p class="func-header">
-    <i>class</i> model.<b>Model</b>(<i>model_function: str='cb', params: dict={}, prediction_type: str='one_shot'</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/model.py#L10">[source]</a>
+    <i>class</i> Wind.model.<b>Model</b>(<i>model_function: str='cb', params: dict={}, prediction_type: str='one_shot'</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L13">[source]</a>
 </p>
 
 
@@ -42,7 +42,7 @@
 
 
 <p class="func-header">
-    <i></i> <b>train</b>(<i>self, train_x: pd.DataFrame, train_y: pd.DataFrame, val_x: pd. DataFrame, val_y: pd.DataFrame, multioutput: bool=False, verbose: int=500 </i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/model.py#L56">[source]</a>
+    <i></i> <b>train</b>(<i>self, train_x: pd.DataFrame, train_y: pd.DataFrame, val_x: pd. DataFrame, val_y: pd.DataFrame, multioutput: bool=False, verbose: int=500 </i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L52">[source]</a>
 </p>
 
 Train the model.
@@ -93,7 +93,7 @@ Train the model.
 
 
 <p class="func-header">
-    <i></i> <b>predict</b>(<i>self, X: pd.DataFrame, horizon: int=1</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/model.py#L99">[source]</a>
+    <i></i> <b>predict</b>(<i>self, X: pd.DataFrame, horizon: int=1</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L95">[source]</a>
 </p>
 
 Make predictions using the trained model depending on prediction type.
@@ -125,7 +125,7 @@ Recursive prediction only supports univariate data with previous steps as featur
 
 
 <p class="func-header">
-    <i></i> <b>model_summarizer</b>(<i>self, val_x: pd.DataFrame, val_y: pd.DataFrame, test_x: pd.DataFrame, test_y: pd.DataFrame, plots: bool=True, plot_steps: int= 2000, feat_importance: bool=True, feat_steps: int=15, feat_names: list= None, horizon: int=1</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/model.py#L134">[source]</a>
+    <i></i> <b>model_summarizer</b>(<i>self, val_x: pd.DataFrame, val_y: pd.DataFrame, test_x: pd.DataFrame, test_y: pd.DataFrame, plots: bool=True, plot_steps: int= 2000, feat_importance: bool=True, feat_steps: int=15, feat_names: list= None, horizon: int=1</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L130">[source]</a>
 </p>
 
 Generate a summary of the model's performance.
@@ -184,6 +184,84 @@ Generate a summary of the model's performance.
     Tuple containing scores (MAE, RMSE, R2) and feature importances (if enabled).
 </p></td>
 </tr>
+    </tbody>
+</table>
+
+
+
+
+
+<p class="func-header">
+    <i></i> <b>hyp_op</b>(<i>self, val_x: pd.DataFrame, val_y: pd.DataFrame, train_x: pd. DataFrame, train_y: pd.DataFrame, horizon: int=1, trial=30, task_type='GPU' </i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L262">[source]</a>
+</p>
+
+Perform hyperparameter optimization for a machine learning model using Optuna.
+
+Parameters:
+val_x (pd.DataFrame): Validation dataset features.
+val_y (pd.DataFrame): Validation dataset labels.
+train_x (pd.DataFrame): Training dataset features.
+train_y (pd.DataFrame): Training dataset labels.
+horizon (int, optional): Prediction horizon for the model. Default is 1.
+trial (int, optional): Number of optimization trials. Default is 30.
+task_type (str, optional): Task type for CatBoost ('CPU' or 'GPU'). Default is 'GPU'.
+
+Returns:
+tuple: A tuple containing the best hyperparameters (dict) and the corresponding best RMSE (float).
+
+This function uses Optuna to perform hyperparameter optimization for a CatBoost machine learning model.
+It searches for the best hyperparameters within the specified parameter ranges and training settings.
+
+The optimization objective is to minimize the Root Mean Squared Error (RMSE) on the validation dataset.
+The best hyperparameters and their corresponding RMSE are returned as a tuple.
+
+Example:
+best_params, best_rmse = hyp_op(val_x, val_y, train_x, train_y, horizon=2, trial=50, task_type='GPU')
+print("Best Hyperparameters:", best_params)
+print("Best RMSE:", best_rmse)
+
+<table class="docutils field-list field-table" frame="void" rules="none">
+    <col class="field-name" />
+    <col class="field-body" />
+    <tbody valign="top">
+        
+    </tbody>
+</table>
+
+
+
+
+
+<p class="func-header">
+    <i></i> <b>feat_select</b>(<i>self, val_x: pd.DataFrame, val_y: pd.DataFrame, train_x: pd .DataFrame, train_y: pd.DataFrame, num_feats=20, num_steps=3, plot=True</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/model.py#L325">[source]</a>
+</p>
+
+Perform feature selection using CatBoost's select_features method.
+
+Parameters:
+val_x (pd.DataFrame): Validation dataset features.
+val_y (pd.DataFrame): Validation dataset labels.
+train_x (pd.DataFrame): Training dataset features.
+train_y (pd.DataFrame): Training dataset labels.
+num_feats (int, optional): Number of features to select. Default is 20.
+num_steps (int, optional): Number of feature selection steps. Default is 3.
+plot (bool, optional): Whether to plot feature selection results. Default is True.
+
+Returns:
+catboost.FeatureSelectionSummary: A summary of the feature selection process.
+
+This function uses CatBoost's select_features method to perform feature selection on the given datasets.
+It selects a specified number of features based on their importance and returns a summary of the process.
+
+Example:
+summary = feat_select(val_x, val_y, train_x, train_y, num_feats=15, num_steps=4, plot=True)
+print(summary)
+
+<table class="docutils field-list field-table" frame="void" rules="none">
+    <col class="field-name" />
+    <col class="field-body" />
+    <tbody valign="top">
+        
     </tbody>
 </table>
 

@@ -94,24 +94,24 @@ The wind turbine power output prediction models were evaluated using two dataset
 
 | Metric                 | MAE        | RMSE      | R2        |
 |:-----------------------|:-----------|:----------|:----------|
-| Next Step Prediction   |            |           |           |
-| Baseline               | 91.554     | 145.603   | -         |
-| One Shot               | 34.105     | 52.417    | 0.938     |
-| One Shot Feat          | 33.558     | 51.983    | 0.939     |
-| One Shot Feat + Hyp-op | **33.532** | **51.87** | **0.939** |
+| Next Step Prediction   |            |            |          |
+| Baseline               | 91.554     | 145.603    | -        |
+| One Shot               | 34.105     | 52.417     | 0.938    |
+| One Shot Feat          | 34.164     | 52.723     | 0.937    |
+| One Shot Feat + Hyp-op | **33.428** | **51.545** | **0.94** ||
 |---------------------	|---------	|---------	|----------	|
 | Next Hour Prediction   |            |            |           |
 | Baseline               | 183.286    | 263.749    | -         |
 | One Shot               | 77.657     | 110.062    | 0.726     |
-| One Shot Feat          | 78.138     | 110.56     | 0.724     |
-| One Shot Feat + Hyp-op | 75.732     | 106.657    | 0.743     |
+| One Shot Feat          | 76.401     | 107.943    | 0.737     |
+| One Shot Feat + Hyp-op | 76.886     | 107.769    | 0.737     |
 | Recursive              | **49.412** | **71.511** | **0.884** |
 |---------------------	|---------	|---------	|----------	|
 | Next Day Prediction    |             |             |           |
 | Baseline               | 510.71      | 623.023     | -         |
-| One Shot               | 152.824     | 187.979     | 0.197     |
-| One Shot Feat          | 151.73      | 188.445     | 0.193     |
-| One Shot Feat + Hyp-op | 153.282     | 186.696     | 0.208     |
+| One Shot               | 149.102     | 186.475     | 0.209     |
+| One Shot Feat          | 156.049     | 191.793     | 0.164     |
+| One Shot Feat + Hyp-op | 153.75      | 189.205     | 0.186     |
 | Recursive              | **107.729** | **142.285** | **0.543** |
 
 The Next Step One Shot prediction obtains a similar result to the baseline, the table does not include the validation results but if you check the validation results from the notebook, there is a significant decrease in the performance. This is most likely caused by the size of the validation data of UEBB which is quite small and covers a very seasonal period of time. This problem will be addressed in the next deadline with robust cross-validation.
@@ -160,21 +160,20 @@ As observed before, both one-shot and recursive predictions outperform the basel
 
 ### **Transfer Learning**
 
-| Metric                              | MAE        | RMSE      | R2        |
-|:------------------------------------|:-----------|:----------|:----------|
-| Transfer Prediction                 |            |           |           |
-| Next step Hyp-op                    | **33.532** | **51.87** | **0.939** |
-| Next step Transfer Hyp-op           | 33.532     | 51.87     | 0.939     |
+| Metric                              | MAE        | RMSE       | R2       |
+|:------------------------------------|:-----------|:-----------|:---------|
+| Next step Hyp-op                    | **33.428** | **51.545** | **0.94** |
+| Next step Transfer Hyp-op           | 33.633     | 51.96      | 0.939    |
 |---------------------	|---------	|---------	|----------	|
-| Next hour Hyp-op                    | 75.732     | 106.657   | 0.743     |
-| Next hour Transfer Hyp-op           | 75.758     | 106.963   | 0.741     |
-| Next hour Recursive                 | 49.412     | 71.511    | 0.884     |
-| Next hour Recursive Transfer Hyp-op | 50.6       | 72.057    | 0.883     |
+| Next hour Hyp-op                    | 76.886     | 107.769    | 0.737    |
+| Next hour Transfer Hyp-op           | 75.559     | 106.965    | 0.741    |
+| Next hour Recursive                 | **49.412**     | **71.511**     | **0.884**    |
+| Next hour Recursive Transfer Hyp-op | 50.6       | 72.057     | 0.883    |
 |---------------------	|---------	|---------	|----------	|
-| Next day Hyp-op                     | 153.282    | 186.696   | 0.208     |
-| Next day Transfer Hyp-op            | 153.282    | 186.696   | 0.208     |
-| Next day Recursive                  | 107.729    | 142.285   | 0.543     |
-| Next day Recursive Transfer Hyp-op  | 102.999    | 136.213   | 0.582     |
+| Next day Hyp-op                     | 153.75     | 189.205    | 0.186    |
+| Next day Transfer Hyp-op            | 153.96     | 188.241    | 0.194    |
+| Next day Recursive                  | 107.729    | 142.285    | 0.543    |
+| Next day Recursive Transfer Hyp-op  | **102.999**    | **136.213**    | **0.582**    |
 
 -----
 ### **Summary**

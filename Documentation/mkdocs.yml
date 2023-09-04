@@ -6,4 +6,5 @@ nav:
     - Home: index.md
     - Dataset: dataset.md
     - Model : model.md
+    - Utils : utils.md
 theme: readthedocs

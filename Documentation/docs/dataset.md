@@ -19,10 +19,10 @@
     table.field-table {
         border-radius: 0.1em
     }
-</style>##dataset.**Dataset**
+</style>##Wind.dataset.**Dataset**
 
 <p class="func-header">
-    <i>class</i> dataset.<b>Dataset</b>(<i>df: pd.DataFrame</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L5">[source]</a>
+    <i>class</i> Wind.dataset.<b>Dataset</b>(<i>df: pd.DataFrame</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L5">[source]</a>
 </p>
 
 
@@ -42,7 +42,7 @@
 
 
 <p class="func-header">
-    <i></i> <b>fill_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L17">[source]</a>
+    <i></i> <b>fill_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L17">[source]</a>
 </p>
 
 Fill missing values (NaN) in the specified fields/columns of the DataFrame.
@@ -73,10 +73,10 @@ Fill missing values (NaN) in the specified fields/columns of the DataFrame.
 
 
 <p class="func-header">
-    <i></i> <b>drop_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L34">[source]</a>
+    <i></i> <b>drop_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L34">[source]</a>
 </p>
 
-Drop rows containing NaN values in the specified fields/columns of the DataFrame.
+Drop columns in the specified fields/columns of the DataFrame.
 
 <table class="docutils field-list field-table" frame="void" rules="none">
     <col class="field-name" />
@@ -104,7 +104,7 @@ Drop rows containing NaN values in the specified fields/columns of the DataFrame
 
 
 <p class="func-header">
-    <i></i> <b>sample</b>(<i>self, n: int</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L49">[source]</a>
+    <i></i> <b>sample</b>(<i>self, n: int</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L49">[source]</a>
 </p>
 
 Sample every nth row from the DataFrame.
@@ -135,7 +135,7 @@ Sample every nth row from the DataFrame.
 
 
 <p class="func-header">
-    <i></i> <b>apply_rolling_window</b>(<i>self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L64">[source]</a>
+    <i></i> <b>apply_rolling_window</b>(<i>self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L64">[source]</a>
 </p>
 
 Apply a rolling window function to the specified data column in the DataFrame.
@@ -178,7 +178,7 @@ Apply a rolling window function to the specified data column in the DataFrame.
 
 
 <p class="func-header">
-    <i></i> <b>add_last_t</b>(<i>self, df: pd.DataFrame, data: str, step: int=2</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L96">[source]</a>
+    <i></i> <b>add_last_t</b>(<i>self, df: pd.DataFrame, data: str, step: int=2</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L96">[source]</a>
 </p>
 
 Add lagged versions of a column to the DataFrame.
@@ -217,7 +217,7 @@ Add lagged versions of a column to the DataFrame.
 
 
 <p class="func-header">
-    <i></i> <b>add_seasonal_feat</b>(<i>self, df: pd.DataFrame, time_col</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L119">[source]</a>
+    <i></i> <b>add_seasonal_feat</b>(<i>self, df: pd.DataFrame, time_col</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L119">[source]</a>
 </p>
 
 Add seasonal features based on a time column.
@@ -252,7 +252,7 @@ Add seasonal features based on a time column.
 
 
 <p class="func-header">
-    <i></i> <b>create_dataset</b>(<i>self, df: pd.DataFrame, window_size: int, prediction_horizon: int, test_split: float=0.2, val_split: float=0.2, univariate: bool=False, target_col: str='active_power_total'</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L140">[source]</a>
+    <i></i> <b>create_dataset</b>(<i>self, df: pd.DataFrame, window_size: int, prediction_horizon: int, test_split: float=0.2, val_split: float=0.2, univariate: bool=False, target_col: str='active_power_total', shuffle: bool=False</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L140">[source]</a>
 </p>
 
 Create a dataset for training and evaluation.
