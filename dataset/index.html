@@ -41,10 +41,6 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="..">About</a>
-                </li>
-              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Dataset</a>
     <ul class="current">
@@ -55,6 +51,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../model/">Model</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../utils/">Utils</a>
                 </li>
               </ul>
       </div>
@@ -101,9 +101,9 @@
         border-radius: 0.1em
     }
 </style>
-<h2 id="datasetdataset">dataset.<strong>Dataset</strong></h2>
+<h2 id="winddatasetdataset">Wind.dataset.<strong>Dataset</strong></h2>
 <p class="func-header">
-    <i>class</i> dataset.<b>Dataset</b>(<i>df: pd.DataFrame</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L5">[source]</a>
+    <i>class</i> Wind.dataset.<b>Dataset</b>(<i>df: pd.DataFrame</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L5">[source]</a>
 </p>
 
 <table class="docutils field-list field-table" frame="void" rules="none">
@@ -116,7 +116,7 @@
 
 <h4 id="methods">Methods</h4>
 <p class="func-header">
-    <i></i> <b>fill_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L17">[source]</a>
+    <i></i> <b>fill_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L17">[source]</a>
 </p>
 
 <p>Fill missing values (NaN) in the specified fields/columns of the DataFrame.</p>
@@ -142,10 +142,10 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>drop_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L34">[source]</a>
+    <i></i> <b>drop_nan</b>(<i>self, fields: list</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L34">[source]</a>
 </p>
 
-<p>Drop rows containing NaN values in the specified fields/columns of the DataFrame.</p>
+<p>Drop columns in the specified fields/columns of the DataFrame.</p>
 <table class="docutils field-list field-table" frame="void" rules="none">
     <col class="field-name" />
     <col class="field-body" />
@@ -168,7 +168,7 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>sample</b>(<i>self, n: int</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L49">[source]</a>
+    <i></i> <b>sample</b>(<i>self, n: int</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L49">[source]</a>
 </p>
 
 <p>Sample every nth row from the DataFrame.</p>
@@ -194,7 +194,7 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>apply_rolling_window</b>(<i>self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L64">[source]</a>
+    <i></i> <b>apply_rolling_window</b>(<i>self, df: pd.DataFrame, data: str, roll_time: int, window_function: callable</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L64">[source]</a>
 </p>
 
 <p>Apply a rolling window function to the specified data column in the DataFrame.</p>
@@ -232,7 +232,7 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>add_last_t</b>(<i>self, df: pd.DataFrame, data: str, step: int=2</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L96">[source]</a>
+    <i></i> <b>add_last_t</b>(<i>self, df: pd.DataFrame, data: str, step: int=2</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L96">[source]</a>
 </p>
 
 <p>Add lagged versions of a column to the DataFrame.</p>
@@ -266,7 +266,7 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>add_seasonal_feat</b>(<i>self, df: pd.DataFrame, time_col</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L119">[source]</a>
+    <i></i> <b>add_seasonal_feat</b>(<i>self, df: pd.DataFrame, time_col</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L119">[source]</a>
 </p>
 
 <p>Add seasonal features based on a time column.</p>
@@ -296,7 +296,7 @@
 </table>
 
 <p class="func-header">
-    <i></i> <b>create_dataset</b>(<i>self, df: pd.DataFrame, window_size: int, prediction_horizon: int, test_split: float=0.2, val_split: float=0.2, univariate: bool=False, target_col: str='active_power_total'</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/dataset.py#L140">[source]</a>
+    <i></i> <b>create_dataset</b>(<i>self, df: pd.DataFrame, window_size: int, prediction_horizon: int, test_split: float=0.2, val_split: float=0.2, univariate: bool=False, target_col: str='active_power_total', shuffle: bool=False</i>) <a class="src-href" target="_blank" href="https://github.com/atahanoezer/Wind.git/Wind/dataset.py#L140">[source]</a>
 </p>
 
 <p>Create a dataset for training and evaluation.</p>
@@ -348,7 +348,7 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href=".." class="btn btn-neutral float-left" title="About"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../model/" class="btn btn-neutral float-right" title="Model">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
