@@ -183,6 +183,8 @@ The results show that the transfer learning approach does not always improve the
 
 In summary, the forecast models, especially the recursive predictions, generally outperform the baselines in terms of MAE and RMSE, indicating a better generalization than the baseline for both of the datasets. However, the recursive prediction scheme is more computationally expensive than the one-shot prediction scheme, which is a significant drawback if real-time inference is required. Furthermore, feature selection and hyperparameter optimization improve the performance of the models, as expected. The transfer learning challenge results show that the hyper-parameter transfer can sometimes improve the performance of the models depending on the task.
 
+### **References**
+
 [1] [https://zenodo.org/record/1475197#.ZD6iMxXP2WC]( URL) 
 
 [2] [https://zenodo.org/record/5841834#.ZEajKXbP2BQC]( URL) 
