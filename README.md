@@ -15,13 +15,6 @@ For a quick start, you can reproduce the results of the project by running the f
 
 **Code Documentation** --> <a href="https://atahanoezer.github.io/Wind/" target="_parent"><img src="https://img.shields.io/badge/Documentation-Click%20Here-blue"/></a>
 
-## Todo List
-
-- [ ] Hyperparameter Optimization and CV
-- [ ] Transfer Learning Challenge
-- [ ] Feature Engineering and Feature Selection
-- [ ] Improved Documentation 
-- [ ] Requirements.txt ( Currently Colab handle this )
 
 
 ----
@@ -99,19 +92,27 @@ The wind turbine power output prediction models were evaluated using two dataset
   
 ### **UEBB Dataset**
 
-| Metric              	| MAE     	| RMSE    	| R2       	|
-|:-------------------:	|:-------:	|:-------:	|:--------:	|
-| Baseline            	| 36.244 	| 55.4172	| -      	|
-| Next Step One Shot    |  **35.264**  |  **54.026**  | **0.934**  |
+| Metric                 | MAE        | RMSE      | R2        |
+|:-----------------------|:-----------|:----------|:----------|
+| Next Step Prediction   |            |           |           |
+| Baseline               | 91.554     | 145.603   | -         |
+| One Shot               | 34.105     | 52.417    | 0.938     |
+| One Shot Feat          | 33.558     | 51.983    | 0.939     |
+| One Shot Feat + Hyp-op | **33.532** | **51.87** | **0.939** |
 |---------------------	|---------	|---------	|----------	|
-| Baseline            	| 81.944	| 119.250	| -      	|
-| Next Hour One Shot    |  76.940  | 108.670    | 0.733   |
-| Next Hour Recursive   |  **54.670**  |  **76.570**     | **0.867**   |
+| Next Hour Prediction   |            |            |           |
+| Baseline               | 183.286    | 263.749    | -         |
+| One Shot               | 77.657     | 110.062    | 0.726     |
+| One Shot Feat          | 78.138     | 110.56     | 0.724     |
+| One Shot Feat + Hyp-op | 75.732     | 106.657    | 0.743     |
+| Recursive              | **49.412** | **71.511** | **0.884** |
 |---------------------	|---------	|---------	|----------	|
-| Baseline            	| 151.508	| 196.742	| -      	|
-| Next Day One Shot     | 173.844   | 207.840   | 0.018 |
-| Next Day Recursive    | **119.604**   | **149.643**   | **0.495**  |
-
+| Next Day Prediction    |             |             |           |
+| Baseline               | 510.71      | 623.023     | -         |
+| One Shot               | 152.824     | 187.979     | 0.197     |
+| One Shot Feat          | 151.73      | 188.445     | 0.193     |
+| One Shot Feat + Hyp-op | 153.282     | 186.696     | 0.208     |
+| Recursive              | **107.729** | **142.285** | **0.543** |
 
 The Next Step One Shot prediction obtains a similar result to the baseline, the table does not include the validation results but if you check the validation results from the notebook, there is a significant decrease in the performance. This is most likely caused by the size of the validation data of UEBB which is quite small and covers a very seasonal period of time. This problem will be addressed in the next deadline with robust cross-validation.
 
@@ -123,19 +124,29 @@ The Next Day Recursive prediction outperforms the other methods significantly, i
   
 ### **Kelmarsh Dataset**
 
+| Metric                 | MAE        | RMSE        | R2        |
+|:-----------------------|:-----------|:------------|:----------|
+| Next Step Prediction   |            |             |           |
+| Baseline               | 91.554     | 145.603     | -         |
+| One Shot               | 90.258     | 140.081     | 0.956     |
+| One Shot Feat          | **89.849** | **139.897** | **0.956** |
+| One Shot Feat + Hyp-op | 93.945     | 143.624     | 0.954     |
+|---------------------	|---------	|---------	|----------	|
+| Next Hour Prediction   |             |             |           |
+| Baseline               | 183.286     | 263.749     | -         |
+| One Shot               | 174.836     | 251.791     | 0.859     |
+| One Shot Feat          | 174.404     | 251.4       | 0.859     |
+| One Shot Feat + Hyp-op | 174.953     | 251.308     | 0.859     |
+| Recursive              | **104.926** | **156.903** | **0.945** |
+|---------------------	|---------	|---------	|----------	|
+| Next Day Prediction    |             |             |           |
+| Baseline               | 510.71      | 623.023     | -         |
+| One Shot               | 521.039     | 627.725     | 0.124     |
+| One Shot Feat          | 503.041     | 613.067     | 0.165     |
+| One Shot Feat + Hyp-op | 496.411     | 606.829     | 0.182     |
+| Recursive              | **163.795** | **247.326** | **0.864** |
 
-| Metric               	| MAE     	| RMSE    	| R2       	|
-|:-------------------:	|:-------:	|:-------:	|:--------:	|
-| Baseline            	| 91.554 	| 145.603	| -      	|
-| Next Step One Shot    |  97.3484  | 147.967   | 0.956  |
-|---------------------	|---------	|---------	|----------	|
-| Baseline            	| 183.286	| 263.749	| -      	|
-| Next Hour One Shot    | 181.811   | 259.706   | 0.862  |
-| Next Hour Recursive   | **110.562**   | **163.066**   | **0.946**  |
-|---------------------	|---------	|---------	|----------	|
-| Baseline            	| 510.710	| 623.023	| -      	|
-| Next Day One Shot     | 489.391    | 583.405    | 0.306 |
-| Next Day Recursive   	| **169.749** 	| **242.492** 	| **0.880** 	| 
+
 
 
 The Next Step One Shot prediction falls back behind the baseline in terms of MAE and RMSE. A validation shortage is also observed in this dataset. This problem will be handled during the next iteration. Yet, current predictions are still good and this makes it possible to use recursive models for long horizons.
@@ -147,6 +158,25 @@ As observed before, both one-shot and recursive predictions outperform the basel
 
 -----
 
+### **Transfer Learning**
+
+| Metric                              | MAE        | RMSE      | R2        |
+|:------------------------------------|:-----------|:----------|:----------|
+| Transfer Prediction                 |            |           |           |
+| Next step Hyp-op                    | **33.532** | **51.87** | **0.939** |
+| Next step Transfer Hyp-op           | 33.532     | 51.87     | 0.939     |
+|---------------------	|---------	|---------	|----------	|
+| Next hour Hyp-op                    | 75.732     | 106.657   | 0.743     |
+| Next hour Transfer Hyp-op           | 75.758     | 106.963   | 0.741     |
+| Next hour Recursive                 | 49.412     | 71.511    | 0.884     |
+| Next hour Recursive Transfer Hyp-op | 50.6       | 72.057    | 0.883     |
+|---------------------	|---------	|---------	|----------	|
+| Next day Hyp-op                     | 153.282    | 186.696   | 0.208     |
+| Next day Transfer Hyp-op            | 153.282    | 186.696   | 0.208     |
+| Next day Recursive                  | 107.729    | 142.285   | 0.543     |
+| Next day Recursive Transfer Hyp-op  | 102.999    | 136.213   | 0.582     |
+
+-----
 ### **Summary**
 
 In summary, the forecast models, especially the recursive predictions, generally outperform the baselines in terms of MAE and RMSE, indicating a better generalization than the baseline for both of the datasets. One observation is that one-shot predictions can not really outperform baselines in both datasets. I believe this is related to having a smaller validation set than the test set and the effects of this appear in the UEBB dataset more heavily. In addition, obtained results do not include the effect of hyperparameter optimization. I believe that the results can be further improved by using  hyperparameter optimization with good cross-validation.
