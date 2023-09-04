@@ -33,7 +33,7 @@ The Model class is just a wrapper for boosted decision trees enabling one-shot a
 
 ## **Datasets**
 
- Datasets are provided for two different wind farms. One of them is located in Beberibe, Brazil and the other one is located in Kelmarsh, UK. 
+ Datasets are provided for two different wind farms. One of them is located in Beberibe, Brazil and the other one is located in Kelmarsh, UK. Both notebooks include the data download and preprocessing steps.
  
  The Brazilian data compilation comprises two sets of information gathered during a micrometeorological study conducted in two separate wind farms situated in a coastal region of northeastern Brazil [1]. The wind farms in question are named Pedra do Sal Wind Farm (UEPS) and Beberibe Wind Farm (UEBB). These farms are positioned along the northeast coast of Brazil, an area characterized by meteorological conditions heavily impacted by trade winds and sea breeze. Each dataset encompasses measurements collected continuously over the course of an entire year, specifically from August 2013 to July 2014. The dataset can be downloaded from [Beberibe Wind Farm](https://zenodo.org/record/1475197#.ZD6iMxXP2WC).
 
@@ -47,7 +47,7 @@ UK dataset encompasses information related to the Kelmarsh wind farm in the UK [
 ## **Exploratory Data Analysis**
 
 
-Exploratory Data Analysis (EDA) plays a crucial role in understanding and extracting insights from datasets. One powerful tool for conducting EDA is the pandas profiling library[3]. It automates the process of generating comprehensive reports on the dataset, providing insights into its structure, statistical measures, and data quality. The reports include information on data types, missing values, correlations, distributions, outliers, and more. By using pandas profiling, analysts can efficiently identify patterns, anomalies, and data quality issues, facilitating informed decision-making in data preprocessing and modeling
+Exploratory Data Analysis (EDA) plays a crucial role in understanding and extracting insights from datasets. One powerful tool for conducting EDA is the pandas profiling library[3]. It automates the process of generating comprehensive reports on the dataset, providing insights into its structure, statistical measures, and data quality. The reports include information on data types, missing values, correlations, distributions, outliers, and more. By using pandas profiling, analysts can efficiently identify patterns, anomalies, and data quality issues, facilitating informed decision-making in data preprocessing and modeling.
 
 EDA was performed on both datasets using the pandas profiling library. The generated reports can be found in the reports folder. Based on the reports, fields with a high number of missing values were removed, while the remaining missing values were either filled using a backward filling or mean imputation methods. Fortunately, the UK dataset providers have already prepared a set of useful columns for analysis out of the original 300 columns [4]. Nevertheless, a profile check was conducted, revealing minor issues that were addressed. Additionally, correlations between the features were examined, and features with high correlation are set to be discarded (TBD). The visualization below showcases the correlation for the UEBB dataset.
 
@@ -62,12 +62,12 @@ EDA was performed on both datasets using the pandas profiling library. The gener
 
 ## **Feature Engineering**
 
-**TBD**
+Feature engineering is a crucial step in the machine learning pipeline. It involves transforming raw data into features that can be used to train a machine-learning model. Time and date values are converted to cyclical features to capture seasonal features. On top of that rolling with different functions such as mean, max, and min are used for several columns. To obtain the best results from the models, feature selection is made by using the recursive Shapley value method of Catboost. Please check the notebooks and the documentation to see the details of the feature engineering steps.
 
 ## **Modeling**
 
 
-The modeling approach involves utilizing two gradient-boosted tree methods, namely Catboost and LightGBM. The Model class design allows for the flexibility to incorporate other tree-based methods if desired. Each model employs two prediction mechanisms: One-shot prediction and Recursive Prediction [5], enabling the generation of predictions for different time horizons. Hyperparameter optimization will be integrated into the current code by the second deadline of the course.
+The modeling approach involves utilizing two gradient-boosted tree methods, namely Catboost and LightGBM. The Model class design allows for the flexibility to incorporate other tree-based methods if desired. Each model employs two prediction mechanisms: One-shot prediction and Recursive Prediction [5], enabling the generation of predictions for different time horizons. Altough LightGBM is supported, experimentation is done only with Catboost due to the time constraints.
 
 ### **One Shot Prediction**
 
@@ -81,44 +81,43 @@ A recursive prediction is a sophisticated approach that involves predicting the 
 
 ### **Hyperparameter Optimization**
 
-TBD
+Decision trees are a great tool for fast inference with tabular data. However, they have many hyperparameters which need to be optimized to achieve the best results. To streamline this process, we have designed our code to be flexible for hyperparameter optimization using Optuna[6]. Optuna uses advanced algorithms such as Bayesian optimization and TPE to intelligently explore the hyperparameter space, making it easier to find the optimal settings. Due to computing power limitations, only three hyperparameters are searched for each model and the results are provided in the results section as Hyp-op. However, our code is designed to be flexible for further hyperparameter optimization. For more information on hyperparameter optimization, please refer to the 'model.py' file.
 
 
 ## **Results**
 
-The wind turbine power output prediction models were evaluated using two datasets: UEBB and Kelmarsh with three prediction horizons such as next 10 min, the next hour, and the next day. The evaluation metrics used to assess the performance of the models were Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R-squared (R2). The baseline results are provided by the lecture and no model information exists. Other than the baseline two modeling schemes such as one shot and recursive prediction were used to generate the results. 
-
- -----
+The wind turbine power output prediction models were evaluated using two datasets: UEBB and Kelmarsh with three prediction horizons as next 10 min, the next hour, and the next day. The evaluation metrics used to assess the performance of the models were Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R-squared (R2). The baseline results are provided by the lecture and no model information exists. Other than the baseline two modeling schemes such as one shot and recursive prediction were used to generate the results. One shot stands for the default setting with all features after pre-processing, One Shot Feat stands for the feature selection with recursive Shapley value, and One Shot Feat + Hyp-op stands for the hyperparameter optimization with Optuna plus feature selection. Recursive stands for recursive prediction as explained above
   
 ### **UEBB Dataset**
 
 | Metric                 | MAE        | RMSE      | R2        |
 |:-----------------------|:-----------|:----------|:----------|
 | Next Step Prediction   |            |            |          |
-| Baseline               | 91.554     | 145.603    | -        |
+| Baseline               | 36.244     | 55.417    | -        |
 | One Shot               | 34.105     | 52.417     | 0.938    |
 | One Shot Feat          | 34.164     | 52.723     | 0.937    |
 | One Shot Feat + Hyp-op | **33.428** | **51.545** | **0.94** ||
 |---------------------	|---------	|---------	|----------	|
 | Next Hour Prediction   |            |            |           |
-| Baseline               | 183.286    | 263.749    | -         |
+| Baseline               | 81.944     | 119.250    | -         |
 | One Shot               | 77.657     | 110.062    | 0.726     |
 | One Shot Feat          | 76.401     | 107.943    | 0.737     |
 | One Shot Feat + Hyp-op | 76.886     | 107.769    | 0.737     |
 | Recursive              | **49.412** | **71.511** | **0.884** |
 |---------------------	|---------	|---------	|----------	|
 | Next Day Prediction    |             |             |           |
-| Baseline               | 510.71      | 623.023     | -         |
+| Baseline               | 151.508     | 196.741     | -         |
 | One Shot               | 149.102     | 186.475     | 0.209     |
 | One Shot Feat          | 156.049     | 191.793     | 0.164     |
 | One Shot Feat + Hyp-op | 153.75      | 189.205     | 0.186     |
 | Recursive              | **107.729** | **142.285** | **0.543** |
 
-The Next Step One Shot prediction obtains a similar result to the baseline, the table does not include the validation results but if you check the validation results from the notebook, there is a significant decrease in the performance. This is most likely caused by the size of the validation data of UEBB which is quite small and covers a very seasonal period of time. This problem will be addressed in the next deadline with robust cross-validation.
+The Next Step One Shot prediction outperforms the baseline with all cases while feature selection with hyperparameter optimization yields the best score. The table does not include the validation results but if you check the validation results from the notebook, there is a significant decrease in the performance. This is most likely caused by the size of the validation data of UEBB which is quite small and covers a very seasonal period of time. This problem will be addressed in the transfer learning section.
 
-The Next Hour One Shot prediction has a similar MAE to the baseline, but it achieves a lower RMSE and MAE, indicating an improvement in prediction accuracy. The R2 value of 0.733 suggests that the model explains a substantial portion of the variance in the data. The Next Hour Recursive prediction outperforms both the baseline and the one-shot prediction in terms of MAE and RMSE, indicating a reduction in prediction errors. 
+The Next Hour results are also similar to next step prediction where the One-shot modeling methods outperform the baseline in all scores. The best score is obtained by the recursive prediction as expected with its complexity. The R2 value of 0.884 suggests that the model's explanatory power is good.
 
-The Next Day Recursive prediction outperforms the other methods significantly, indicating improved prediction accuracy for longer time horizons. However, the R2 value of 0.495 suggests that the model's explanatory power is limited compared to short-horizon predictions.
+The Next Day Recursive prediction outperforms the other methods significantly, indicating improved prediction accuracy for longer time horizons. However, One Shot Feat + Hyp-op fails to outperform Baseline whereas the default setting of One Shot Feat outperforms the baseline. This is most likely caused by the size of the validation data.
+
 
  -----
   
@@ -147,40 +146,42 @@ The Next Day Recursive prediction outperforms the other methods significantly, i
 | Recursive              | **163.795** | **247.326** | **0.864** |
 
 
+All One-Shot modeling methods outperform the baseline in the next step prediction for the Kelmarsh Dataset. However, Hyper-parameters optimization overfits the validation data and fails to outperform the other methods. The best score is obtained by the One Shot Feat method. The R2 value of 0.956 suggests that the model's explanatory power is good.
 
+Both One-Shot and Recursive modeling outperform the baseline in terms of MAE and RMSE scores. Furthermore, their R2 values suggest a good explanatory power of the models. Yet, the Recursive prediction achieves significantly lower MAE, RMSE, and R2 compared to the One-shot prediction, indicating a better representation of the longer steps. Hyper-parameter optimization does not bring a lot of improvement to the results due to its restriction to 3 hyper-parameters.
 
-The Next Step One Shot prediction falls back behind the baseline in terms of MAE and RMSE. A validation shortage is also observed in this dataset. This problem will be handled during the next iteration. Yet, current predictions are still good and this makes it possible to use recursive models for long horizons.
-
-Both One shot and Recursive prediction outperforms the baseline in terms of MAE and RMSE scores. Furthermore, their R2 values suggest a good explanatory power of the models. Yet, the Recursive prediction achieves significantly lower MAE, RMSE, and R2 compared to the One Shot prediction, indicating a better representation of the longer steps.
-
-As observed before, both one-shot and recursive predictions outperform the baseline in terms of MAE and RMSE scores. However, one-shot prediction is not quite capable of capturing daily patterns, as indicated by the R2 value of 0.306. In contrast, the recursive prediction is quite good at capturing daily patterns such that it surpasses even the hourly one-shot predictions in terms of MAE and RMSE scores. 
+The default One Shot modeling fails to beat the Baseline in next-day prediction. Yet, One Shot Feat and One Shot Feat + Hyp-op outperform the baseline. The best score is obtained by the Recursive prediction as expected with its complexity. The R2 value of 0.864 suggests that the model's explanatory power is good. As observed with the previous results, the recursive prediction scheme outperforms the one-shot prediction scheme in terms of MAE and RMSE scores, indicating a better representation of the longer steps.
 
 
 -----
 
-### **Transfer Learning**
+### **Transfer Learning Challenge**
+
+
+The transfer learning challenge is to use the Kelmarsh dataset to improve the performance of the UEBB dataset. The performance of Catboost notwithstanding, transfer learning is not straightforward on decision trees compared to Deep learning methods. One of the easiest ways is stacking up the models, however; this approach did not yield good results hence it is not included in the experimentation. To be able to fulfill the challenge, the hyperparameter optimization of the Kelmarsh dataset (which has about 10x more validation data) is used also for the Beberibe dataset. This method is named Transfer Hyp-op in the results table. One important side note to mention is that the Recursive method also uses the optimized hyperparameters of the original dataset. Hence, it provides a fair comparison between the Original Hyp-op and Transfer Hyp-op. The results are provided in the table below.
 
 | Metric                              | MAE        | RMSE       | R2       |
 |:------------------------------------|:-----------|:-----------|:---------|
-| Next step Hyp-op                    | **33.428** | **51.545** | **0.94** |
-| Next step Transfer Hyp-op           | 33.633     | 51.96      | 0.939    |
+| One Shot Next step Hyp-op                    | **33.428** | **51.545** | **0.94** |
+| One Shot Next step Transfer Hyp-op           | 33.633     | 51.96      | 0.939    |
 |---------------------	|---------	|---------	|----------	|
-| Next hour Hyp-op                    | 76.886     | 107.769    | 0.737    |
-| Next hour Transfer Hyp-op           | 75.559     | 106.965    | 0.741    |
+| One Shot Next hour Hyp-op                    | 76.886     | 107.769    | 0.737    |
+| One Shot Next hour Transfer Hyp-op           | 75.559     | 106.965    | 0.741    |
 | Next hour Recursive                 | **49.412**     | **71.511**     | **0.884**    |
 | Next hour Recursive Transfer Hyp-op | 50.6       | 72.057     | 0.883    |
 |---------------------	|---------	|---------	|----------	|
-| Next day Hyp-op                     | 153.75     | 189.205    | 0.186    |
-| Next day Transfer Hyp-op            | 153.96     | 188.241    | 0.194    |
+| One Shot Next day Hyp-op                     | 153.75     | 189.205    | 0.186    |
+| One Shot Next day Transfer Hyp-op            | 153.96     | 188.241    | 0.194    |
 | Next day Recursive                  | 107.729    | 142.285    | 0.543    |
 | Next day Recursive Transfer Hyp-op  | **102.999**    | **136.213**    | **0.582**    |
+
+
+The results show that the transfer learning approach does not always improve the performance of the models but it is important to remember that the hyper-parameter number is quite restricted in this setup. In contrast to the other experiment in the challenge section, the hyper-parameter transfer increased the results of the Next-day Recursive prediction by nearly %4. This result encourages further experimentation with hyper-parameter transfer while using similar tabular datasets with decision trees.
 
 -----
 ### **Summary**
 
-In summary, the forecast models, especially the recursive predictions, generally outperform the baselines in terms of MAE and RMSE, indicating a better generalization than the baseline for both of the datasets. One observation is that one-shot predictions can not really outperform baselines in both datasets. I believe this is related to having a smaller validation set than the test set and the effects of this appear in the UEBB dataset more heavily. In addition, obtained results do not include the effect of hyperparameter optimization. I believe that the results can be further improved by using  hyperparameter optimization with good cross-validation.
-
-## **References**
+In summary, the forecast models, especially the recursive predictions, generally outperform the baselines in terms of MAE and RMSE, indicating a better generalization than the baseline for both of the datasets. However, the recursive prediction scheme is more computationally expensive than the one-shot prediction scheme, which is a significant drawback if real-time inference is required. Furthermore, feature selection and hyperparameter optimization improve the performance of the models, as expected. The transfer learning challenge results show that the hyper-parameter transfer can sometimes improve the performance of the models depending on the task.
 
 [1] [https://zenodo.org/record/1475197#.ZD6iMxXP2WC]( URL) 
 
@@ -191,4 +192,6 @@ In summary, the forecast models, especially the recursive predictions, generally
 [4] [https://github.com/charlie9578/CubicoOpenData/blob/main/Kelmarsh.ipynb]( URL) 
 
 [5] [https://phdinds-aim.github.io/time_series_handbook/08_WinningestMethods/lightgbm_m5_forecasting.html]( URL) 
+
+[6] [https://optuna.readthedocs.io/en/stable/index.htmll]( URL) 
 
